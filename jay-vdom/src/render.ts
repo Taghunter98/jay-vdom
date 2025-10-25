@@ -38,14 +38,12 @@ function renderElement(node: VElement): Rendered {
     for (const [k, v] of Object.entries(attrs as VAttrs)) {
       if (typeof v === "function" && isEventAttr(k)) {
         attachListener($el, k, v as EventListener);
-      } else if (v === true) {
+      } else if (v === true)
         // boolean true -> set attribute without value (HTML boolean attribute)
         $el.setAttribute(k, "");
-      } else if (v === false || v == null) {
+      else if (v === false || v == null) {
         // skip false or null/undefined (don't set)
-      } else {
-        $el.setAttribute(k, String(v));
-      }
+      } else $el.setAttribute(k, String(v));
     }
   }
 

@@ -1,23 +1,53 @@
 import createElement from "./createElement";
 import diff from "./diff";
+import {
+  beginRenderFor,
+  endRenderFor,
+  resetRenderCounter,
+  useState,
+} from "./hooks";
 import mount from "./mount";
 import render, { type Rendered } from "./render";
 import type { VNode } from "./types";
 
+// current mounted VDOM and rendered DOM
 let $currentState: VNode;
 let $currentVDOM: Rendered;
 
+/**
+ * # build
+ *
+ * Function builds the virtual DOM and sets up the project.
+ */
 function build(appState: VNode) {
-  console.log("Building DOM tree...");
-  $currentState = appState;
-  const $app = render(appState);
-  const $div = document.getElementById("app");
-  if (!$div) throw new Error("Error mounting app");
-  $currentVDOM = mount($app, $div);
+  // Reset the per-render cursor so hook keys are generated consistently each render pass.
+  resetRenderCounter();
+  beginRenderFor("AppRoot");
+  try {
+    $currentState = appState;
+    const $app = render(appState);
+    const $div = document.getElementById("app");
+    if (!$div) throw new Error("Error mounting app");
+    $currentVDOM = mount($app, $div);
+  } finally {
+    endRenderFor();
+  }
+}
+
+function renderComponent<T extends any[]>(
+  componentName: string,
+  fn: (...args: T) => VNode,
+  ...args: T
+): VNode {
+  beginRenderFor(componentName);
+  try {
+    return fn(...args);
+  } finally {
+    endRenderFor();
+  }
 }
 
 function update(newState: VNode) {
-  console.log("Updating...");
   const patch = diff($currentState, newState);
   const patched = patch($currentVDOM);
   if (!patched) throw new Error("Error patching");
@@ -25,11 +55,17 @@ function update(newState: VNode) {
   $currentState = newState;
 }
 
-/**
- * Clicker now returns a VNode whose button has an onClick handler.
- * The handler updates the VDOM by calling update with a new VNode structure.
- */
-function Clicker(count: number) {
+// Clicker.ts (kept inline here for convenience)
+function Clicker(count: number, name: string) {
+  const [rendered, setRendered] = useState<number>(() => 0);
+
+  function clickHandler() {
+    setRendered(prev => prev + 1);
+    const nextCount = count + 1;
+    const nextName = rendered > 4 ? "CHANGED" : "Beth";
+    update(renderComponent("Clicker", Clicker, nextCount, nextName));
+  }
+
   return createElement(
     "div",
     { style: "display: flex; flex-direction: column; gap: 20;" },
@@ -37,34 +73,27 @@ function Clicker(count: number) {
       createElement("h1", {}, ["Hello World!"]),
       "The current count is:",
       String(count),
-      // note: id is "btn" to match any selectors. We pass the handler as onClick.
+      createElement("h3", {}, [name]),
+      createElement("button", { type: "button", onClick: clickHandler }, [
+        "Click Me",
+      ]),
       createElement(
-        "button",
-        {
-          id: "btn",
-          type: "button",
-          onClick: (e: Event) => {
-            // event handler lives in VNode attrs and will be attached by render/diff
-            console.log("click handler: set count to", count + 1);
-            update(Clicker(count + 1));
-          },
-        },
-        ["Click Me"]
+        "img",
+        { src: "https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif" },
+        []
       ),
-      createElement("img", {
-        src: "https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif",
-      }),
     ]
   );
 }
 
+// App entry point: use renderComponent for the top-level Clicker instance
 function vApp() {
   return createElement(
     "div",
     {
       id: "app",
     },
-    [Clicker(0)]
+    [renderComponent("Clicker", Clicker, 0, "Josh")]
   );
 }
 

@@ -6,7 +6,7 @@ import render, { type Rendered } from "./render";
  */
 type Patch = (node: Rendered) => Rendered | undefined;
 
-const LISTENERS = Symbol.for("vdom_listeners"); // must match render.ts symbol usage pattern
+const LISTENERS = Symbol.for("vdom_listeners");
 
 function isEventAttr(key: string): boolean {
   return /^on[A-Z]/.test(key) || /^on[a-z]/.test(key);
@@ -37,11 +37,7 @@ function diffAttrs(oldAttrs: VAttrs = {}, newAttrs: VAttrs = {}) {
             map.set(eventName, newFn);
           }
         }
-        // else ignore non-on* function attrs
-      } else {
-        // primitive: set attribute
-        $node.setAttribute(k, String(v));
-      }
+      } else $node.setAttribute(k, String(v));
     });
   }
 
