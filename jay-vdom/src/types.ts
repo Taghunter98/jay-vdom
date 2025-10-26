@@ -4,7 +4,7 @@ export interface VElement {
   children?: VNode[];
 }
 
-export type VAttrValue = string | number | boolean | ((ev: Event) => void); // event handler allowed
+export type VAttrValue = string | number | boolean | ((ev: Event) => void);
 
 export type VAttrs = Record<string, VAttrValue>;
 export type VNode = VElement | string;

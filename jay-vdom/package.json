@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run tests/"
+    "test": "vitest run src/tests/"
   },
   "devDependencies": {
+    "@vitest/browser": "^4.0.3",
+    "jsdom": "^27.0.1",
+    "playwright": "^1.56.1",
     "typescript": "~5.9.3",
     "vite": "^7.1.7",
     "vitest": "^4.0.3"

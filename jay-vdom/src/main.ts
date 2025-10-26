@@ -1,14 +1,18 @@
-import createElement from "./createElement";
 import diff from "./diff";
-import {
-  beginRenderFor,
-  endRenderFor,
-  resetRenderCounter,
-  useState,
-} from "./hooks";
+import { beginRenderFor, endRenderFor, resetRenderCounter } from "./hooks";
 import mount from "./mount";
-import render, { type Rendered } from "./render";
-import type { VNode } from "./types";
+import { render } from "./render";
+import type { Rendered } from "./render";
+import type { VElement, VNode } from "./types";
+
+/**
+ * # vApp
+ *
+ * Global app state holds the current VElement.
+ *
+ * Created on app startup.
+ */
+let vApp: (() => VElement) | null = null;
 
 // current mounted VDOM and rendered DOM
 let $currentState: VNode;
@@ -18,14 +22,38 @@ let $currentVDOM: Rendered;
  * # build
  *
  * Function builds the virtual DOM and sets up the project.
+ *
+ * ## Behaviour
+ *
+ * - The render counter is reset for the new build.
+ * - The hook counter is set and scoped for the given root element.
+ * - The app state is saved and inital render occurs.
+ * - The central `div` is fetched and asserted.
+ * - The app is mounted to the DOM.
+ *
+ * ## Throws Errors
+ *
+ * - If the render fails.
+ * - If the app div is undefined.
+ *
+ * ## Example
+ *
+ * ```ts
+ * function App() {
+ *   // Return element
+ * }
+ *
+ * // Start application
+ * build(App)
+ * ```
  */
-function build(appState: VNode) {
-  // Reset the per-render cursor so hook keys are generated consistently each render pass.
+export function build(appState: () => VElement) {
   resetRenderCounter();
   beginRenderFor("AppRoot");
   try {
-    $currentState = appState;
-    const $app = render(appState);
+    vApp = appState;
+    $currentState = appState();
+    const $app = render($currentState);
     const $div = document.getElementById("app");
     if (!$div) throw new Error("Error mounting app");
     $currentVDOM = mount($app, $div);
@@ -34,67 +62,33 @@ function build(appState: VNode) {
   }
 }
 
-function renderComponent<T extends any[]>(
-  componentName: string,
-  fn: (...args: T) => VNode,
-  ...args: T
-): VNode {
-  beginRenderFor(componentName);
-  try {
-    return fn(...args);
-  } finally {
-    endRenderFor();
-  }
-}
-
-function update(newState: VNode) {
+/**
+ * # update
+ *
+ * Function performs primary update to VDOM.
+ *
+ * ## Behaviour
+ *
+ * - Attempts a diff check, returns either a new tree or undefined.
+ * - Given there has been a change, the patch is activated against the current tree.
+ * - If the patched succedes the current VDOM is updated.
+ *
+ * ## Behaviour
+ *
+ * ```ts
+ * // Updating a component with a new count
+ * count++;
+ * update(renderComponent("Counter", Counter, count));
+ * ```
+ *
+ * @param newState
+ */
+export function update() {
+  if (!vApp) throw new Error("Unable to update Virtual Dom");
+  const newState = vApp();
   const patch = diff($currentState, newState);
   const patched = patch($currentVDOM);
   if (!patched) throw new Error("Error patching");
   $currentVDOM = patched;
   $currentState = newState;
 }
-
-// Clicker.ts (kept inline here for convenience)
-function Clicker(count: number, name: string) {
-  const [rendered, setRendered] = useState<number>(() => 0);
-
-  function clickHandler() {
-    setRendered(prev => prev + 1);
-    const nextCount = count + 1;
-    const nextName = rendered > 4 ? "CHANGED" : "Beth";
-    update(renderComponent("Clicker", Clicker, nextCount, nextName));
-  }
-
-  return createElement(
-    "div",
-    { style: "display: flex; flex-direction: column; gap: 20;" },
-    [
-      createElement("h1", {}, ["Hello World!"]),
-      "The current count is:",
-      String(count),
-      createElement("h3", {}, [name]),
-      createElement("button", { type: "button", onClick: clickHandler }, [
-        "Click Me",
-      ]),
-      createElement(
-        "img",
-        { src: "https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif" },
-        []
-      ),
-    ]
-  );
-}
-
-// App entry point: use renderComponent for the top-level Clicker instance
-function vApp() {
-  return createElement(
-    "div",
-    {
-      id: "app",
-    },
-    [renderComponent("Clicker", Clicker, 0, "Josh")]
-  );
-}
-
-build(vApp());
