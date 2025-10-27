@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import createElement from "../createElement";
 import { render } from "../render";
+import { div, h1, img, p } from "../elements";
 
 describe("Testing render", () => {
   /**
@@ -47,6 +48,29 @@ describe("Testing render", () => {
         createElement("img"),
       ]),
     ]);
+    const element = render(vnode);
+    document.body.appendChild(element);
+
+    expect(element).toBeDefined();
+    expect(element instanceof HTMLElement);
+    expect(document.body.querySelector("div")?.getAttribute("id")).toBe("test");
+    expect(document.body.querySelector("h1")).toBeDefined();
+    expect(document.body.querySelector("p")).toBeDefined();
+    expect(document.body.querySelector("img")).toBeDefined();
+  });
+});
+
+describe("Testing Element Library", () => {
+  test("Should render a div", () => {
+    const vnode = div(
+      { id: "test" },
+      div(
+        {},
+        h1({}, "Hello World!"),
+        p({}, "This is cool text"),
+        img({ src: "https://..." })
+      )
+    );
     const element = render(vnode);
     document.body.appendChild(element);
 

@@ -1,7 +1,7 @@
 import diff from "./diff";
 import { beginRenderFor, endRenderFor, resetRenderCounter } from "./hooks";
 import mount from "./mount";
-import { render } from "./render";
+import { render, renderElement } from "./render";
 import type { Rendered } from "./render";
 import type { VElement, VNode } from "./types";
 
@@ -53,7 +53,7 @@ export function build(appState: () => VElement) {
   try {
     vApp = appState;
     $currentState = appState();
-    const $app = render($currentState);
+    const $app = renderElement($currentState);
     const $div = document.getElementById("app");
     if (!$div) throw new Error("Error mounting app");
     $currentVDOM = mount($app, $div);
