@@ -1,0 +1,53 @@
+import { state } from "../hooks";
+
+/**
+ * Smaller nested component.
+ *
+ * @returns
+ */
+export function Counter() {
+  const [count, setCount] = state<number>(0);
+
+  function clickHandler() {
+    setCount(c => c + 1);
+  }
+
+  return (
+    <div>
+      <h1>Counter Demo</h1>
+      <button type="button" onClick={clickHandler}>
+        {count.toString()}
+      </button>
+      <Name value="Steve" />
+    </div>
+  );
+}
+
+export function Name(props: { value: string }) {
+  const [name, setName] = state<string>(props.value);
+
+  const names = ["Josh", props.value, "Beth", "Cheryl"];
+
+  function handleClick() {
+    setName(names[Math.floor(Math.random() * 4)]);
+  }
+
+  return (
+    <div>
+      <h1>{name}</h1>
+      <button onClick={handleClick}>Change Name</button>
+    </div>
+  );
+}
+
+export function Gif() {
+  return (
+    <div>
+      <h1>Cool Dog Gif</h1>
+      <img
+        src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnpuOTFsbmQ0bHByczlyeG1jcGttdW8yOGk0cnBkaTlvOWVyMXJndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jp2KXzsPtoKFG/giphy.gif"
+        style="width: 500px; height: 500px;"
+      />
+    </div>
+  );
+}

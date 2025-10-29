@@ -149,7 +149,8 @@ export function renderComponent<T extends any[]>(
   fn: (...args: T) => VNode,
   ...args: T
 ): VNode {
-  beginRenderFor(fn.name);
+  const name = fn.name;
+  beginRenderFor(name);
   try {
     return fn(...args);
   } finally {

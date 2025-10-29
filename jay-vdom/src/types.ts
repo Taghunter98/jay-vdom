@@ -4,9 +4,17 @@ export interface VElement {
   children?: VNode[];
 }
 
-export type VAttrValue = string | number | boolean | ((ev: Event) => void);
+export type VAttrValue =
+  | string
+  | number
+  | boolean
+  | ((ev: Event) => void)
+  | VNode
+  | VNode[];
 export type VAttrs = Record<string, VAttrValue>;
 export type VNode = VElement | string;
+
+export type Link = { key: string; attrs?: VAttrs; element: VElement };
 
 export interface Img extends GenericAttributes {
   /**
@@ -19,6 +27,15 @@ export interface Img extends GenericAttributes {
    * ```
    */
   src?: string;
+}
+
+export interface Input extends GenericAttributes {
+  /**
+   * # placeholder
+   *
+   * Placeholder text for the input element.
+   */
+  placeholder?: string;
 }
 
 export interface GenericAttributes extends VEventHandlers {
