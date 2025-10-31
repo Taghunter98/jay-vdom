@@ -156,22 +156,29 @@ export function diffChildren(
       return ($parent: Rendered) => {
         if ($parent instanceof HTMLElement)
           $parent.appendChild(render(additionalVChild));
-
         return $parent;
       };
     });
 
+  const removalCount = oldVChildren.length - newVChildren.length;
+
   return ($parent: Rendered) => {
     if (!($parent instanceof HTMLElement)) return $parent;
 
-    $parent.childNodes.forEach(($child, i) => {
+    const childNodes = Array.from($parent.childNodes);
+
+    childNodes.forEach(($child, i) => {
       const patch = childPatches[i];
       if (patch) patch($child as Rendered);
     });
 
-    for (const patch of additionalPatches) {
-      patch($parent);
-    }
+    if (removalCount > 0)
+      for (let i = newVChildren.length; i < oldVChildren.length; i++) {
+        const $child = childNodes[i];
+        if ($child) $child.remove();
+      }
+
+    for (const patch of additionalPatches) patch($parent);
 
     return $parent;
   };

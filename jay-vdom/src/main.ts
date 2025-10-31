@@ -1,7 +1,7 @@
 import diff from "./diff";
 import { beginRenderFor, endRenderFor, resetRenderCounter } from "./hooks";
 import mount from "./mount";
-import { render, renderElement } from "./render";
+import { renderElement } from "./render";
 import type { Rendered } from "./render";
 import type { VElement, VNode } from "./types";
 

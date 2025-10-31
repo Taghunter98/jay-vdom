@@ -10,7 +10,7 @@ export function jsx(type: any, props: any, key?: any) {
 
   const { children, ...attrs } = props ?? {};
 
-  const kids = (
+  const childNodes = (
     children === undefined
       ? []
       : Array.isArray(children)
@@ -18,7 +18,7 @@ export function jsx(type: any, props: any, key?: any) {
       : [children]
   ).filter(Boolean);
 
-  return createElement(type, attrs, kids);
+  return createElement(type, attrs, childNodes);
 }
 
 export { jsx as jsxs, jsx as Fragment, jsx as jsxDEV };

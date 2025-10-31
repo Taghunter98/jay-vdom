@@ -1,9 +1,9 @@
 import { update } from "./main";
 
-const componentStates = new Map<string, any>();
+export const componentStates = new Map<string, any>();
 let currentComponentId: string | null = null;
 let currentHookIndex = 0;
-let renderCounter = 0;
+export let renderCounter = 0;
 
 /**
  * # beginRenderFor

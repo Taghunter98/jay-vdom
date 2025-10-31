@@ -92,7 +92,7 @@ function buildGenericElement(
  * @returns
  */
 export function Link(
-  props: { dataKey: string; children: VNode | VNode[] } & VAttrs
+  props: { dataKey: string; class: string; children: VNode | VNode[] } & VAttrs
 ): VElement {
   const { dataKey, children, ...attrs } = props;
   const kids = Array.isArray(children) ? children : [children];

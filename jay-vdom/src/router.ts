@@ -1,7 +1,6 @@
 import createElement from "./createElement";
-import { a, div } from "./elements";
 import { state } from "./hooks";
-import type { Link, VAttrs, VElement, VNode } from "./types";
+import type { VElement, VNode } from "./types";
 
 /**
  * # Router
@@ -16,11 +15,38 @@ import type { Link, VAttrs, VElement, VNode } from "./types";
  *
  * ## Example
  *
- * ```ts
- * Router(
- *   Link("Counter", Counter()),
- *   Link("Gif", Gif()),
- * )
+ * Create a plain router.
+ *
+ * ```tsx
+ * <Router class="navbar">
+ *   <Link class="link-style" dataKey="Counter">
+ *     <Counter />
+ *   </Link>
+ *   <Link class="link-style" dataKey="Gif">
+ *     <Gif />
+ *   </Link>
+ * </Router>
+ * ```
+ *
+ * Or style with a layout.
+ *
+ * ```tsx
+ * <Router
+ *   layout={(links, page) => (
+ *     <div>
+ *       <div class="navbar">
+ *         <h1>My Website</h1>
+ *         <div style="display: flex; gap: 20px;">{links}</div>
+ *       </div>
+ *     <main>{page}</main>
+ *     <footer>Coppyright myawesomewebsite.com 2025</footer>
+ *   </div>
+ * )}
+ * >
+ *   <Link class="link-style" dataKey="Counter">
+ *     <Counter />
+ *   </Link>
+ * </Router>
  * ```
  *
  * @param attrs HTML attributes for the router.
@@ -30,6 +56,7 @@ import type { Link, VAttrs, VElement, VNode } from "./types";
 export default function Router(props: {
   class?: string;
   children: VElement[];
+  layout?: (links: VNode[], currentPage: VNode) => VElement;
 }) {
   const links = props.children ?? [];
   if (!links.length) throw new Error("No components provided");
@@ -44,15 +71,22 @@ export default function Router(props: {
   links.forEach((child, i) => {
     const key = child.attrs?.["data-key"] as string;
     const hash = key + "#" + i;
-    newLinks.push(createElement("a", { onClick: () => setPage(hash) }, [key]));
+    const css = child.attrs?.["class"] as string;
+    child.attrs = {}; // temp, reset attributes for children
+    newLinks.push(
+      createElement("a", { class: css, onClick: () => setPage(hash) }, [key])
+    );
     linkMap.set(hash, child);
   });
 
   const currentPage = linkMap.get(page);
   if (!currentPage) throw new Error("Page rendering failed");
 
-  return div(
-    createElement("div", { class: props.class ?? "" }, [...newLinks]),
-    currentPage
-  );
+  if (props.layout) return props.layout(newLinks, currentPage);
+
+  // Default layout (navbar + page)
+  return createElement("div", {}, [
+    createElement("div", { class: props.class ?? "" }, newLinks),
+    currentPage,
+  ]);
 }

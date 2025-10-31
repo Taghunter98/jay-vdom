@@ -23,10 +23,10 @@ export function Counter() {
   );
 }
 
-export function Name(props: { value: string }) {
-  const [name, setName] = state<string>(props.value);
+export function Name({ value }: { value: string }) {
+  const [name, setName] = state<string>(value);
 
-  const names = ["Josh", props.value, "Beth", "Cheryl"];
+  const names = ["Josh", value, "Beth", "Cheryl"];
 
   function handleClick() {
     setName(names[Math.floor(Math.random() * 4)]);

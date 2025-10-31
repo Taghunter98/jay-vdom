@@ -113,9 +113,8 @@ export function renderElement(node: VElement): Rendered {
       if (typeof v === "function" && isEventAttr(k))
         attachListener($el, k, v as EventListener);
       else if (v === true) $el.setAttribute(k, "");
-      else if (v === false || v == null) {
-        // skip false or null/undefined
-      } else $el.setAttribute(k, String(v));
+      else if (v === false || v == null) continue;
+      else $el.setAttribute(k, String(v));
     }
   }
 

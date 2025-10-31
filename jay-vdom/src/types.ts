@@ -67,6 +67,7 @@ export interface GenericAttributes extends VEventHandlers {
   class?: string;
   style?: string;
   type?: string;
+  children?: string[] | string | VNode;
 }
 
 /**
