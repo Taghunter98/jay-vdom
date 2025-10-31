@@ -61,7 +61,11 @@ function toEventName(attrKey: string): string {
  * @param attrKey Attribute key e.g onClick, onInput.
  * @param fn Attribute function to wire as listener.
  */
-function attachListener($el: HTMLElement, attrKey: string, fn: EventListener) {
+export function attachListener(
+  $el: HTMLElement,
+  attrKey: string,
+  fn: EventListener
+) {
   const eventName = toEventName(attrKey);
   let map: Map<string, EventListener> = ($el as any)[LISTENERS];
   if (!map) {
@@ -138,11 +142,17 @@ export function render(node: VNode): Rendered {
 /**
  * # renderComponent
  *
- * Function renders a component
+ * Function renders a component and returns the function component
+ * with args.
  *
- * @param fn
- * @param args
- * @returns
+ * ## Behaviour
+ *
+ * - Begins rendering process and returns `VNode` function.
+ * - Ends the render for the component by nullifying its ID.
+ *
+ * @param fn Component function.
+ * @param args Component arguments.
+ * @returns VNode instance.
  */
 export function renderComponent<T extends any[]>(
   fn: (...args: T) => VNode,

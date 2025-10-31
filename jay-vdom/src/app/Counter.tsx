@@ -13,12 +13,12 @@ export function Counter() {
   }
 
   return (
-    <div>
-      <h1>Counter Demo</h1>
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+      <h1>My Counter</h1>
       <button type="button" onClick={clickHandler}>
         {count.toString()}
       </button>
-      <Name value="Steve" />
+      {/* <Name value="Steve" /> */}
     </div>
   );
 }

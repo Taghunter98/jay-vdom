@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import createElement from "../createElement";
-import { render } from "../render";
+import { attachListener, render, renderComponent } from "../render";
 import { div, h1, img, p } from "../elements";
 
 describe("Testing render", () => {
@@ -57,6 +57,46 @@ describe("Testing render", () => {
     expect(document.body.querySelector("h1")).toBeDefined();
     expect(document.body.querySelector("p")).toBeDefined();
     expect(document.body.querySelector("img")).toBeDefined();
+  });
+
+  test("Should render a component", () => {
+    const component = ({ name }: { name: string }) => {
+      return div({ id: "test" }, h1(name));
+    };
+
+    renderComponent(component, { name: "Testing" });
+
+    expect(document.body.querySelector("h1")?.innerHTML).toBeDefined();
+  });
+});
+
+describe("Testing event listeners", () => {
+  const vnode = div({ id: "test" });
+
+  /**
+   * Tests attaching an onclick event
+   */
+  test("Should attach a listener", () => {
+    const spy = vi.fn();
+    const $el = render(vnode) as HTMLElement;
+    attachListener($el, "onClick", spy);
+
+    $el.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  /**
+   * Tests attaching an onInput event
+   */
+  test("Should attach a listener", () => {
+    const spy = vi.fn();
+    const $el = render(vnode) as HTMLElement;
+    attachListener($el, "onInput", spy);
+
+    $el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+
+    expect(spy).toHaveBeenCalled();
   });
 });
 

@@ -54,8 +54,9 @@ import type { VElement, VNode } from "./types";
  * @returns Router element with links.
  */
 export default function Router(props: {
+  id?: string;
   class?: string;
-  children: VElement[];
+  children?: VElement[];
   layout?: (links: VNode[], currentPage: VNode) => VElement;
 }) {
   const links = props.children ?? [];
@@ -72,7 +73,7 @@ export default function Router(props: {
     const key = child.attrs?.["data-key"] as string;
     const hash = key + "#" + i;
     const css = child.attrs?.["class"] as string;
-    child.attrs = {}; // temp, reset attributes for children
+    child.attrs = {};
     newLinks.push(
       createElement("a", { class: css, onClick: () => setPage(hash) }, [key])
     );
@@ -86,7 +87,11 @@ export default function Router(props: {
 
   // Default layout (navbar + page)
   return createElement("div", {}, [
-    createElement("div", { class: props.class ?? "" }, newLinks),
+    createElement(
+      "div",
+      { id: props.id ?? "", class: props.class ?? "" },
+      newLinks
+    ),
     currentPage,
   ]);
 }

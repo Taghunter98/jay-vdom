@@ -12,6 +12,7 @@ export function Form() {
 
   return (
     <div style="display: flex; flex-direction: column; padding: 20px; border: solid 2px gray">
+      <h2>Cool Form</h2>
       <input
         style="display: flex; padding: 5px"
         onInput={(e: InputEvent) => inputHandler(e, "username")}
