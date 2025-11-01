@@ -2,7 +2,7 @@ import { afterEach, describe } from "node:test";
 import { beforeEach, expect, test } from "vitest";
 import createElement from "../createElement";
 import { state } from "../hooks";
-import { build, update } from "../main";
+import { build } from "../main";
 import { renderComponent } from "../render";
 import { div } from "../elements";
 import type { VNode } from "../types";

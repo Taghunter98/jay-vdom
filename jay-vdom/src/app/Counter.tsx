@@ -1,4 +1,13 @@
-import { state } from "../hooks";
+import { effect, state } from "../hooks";
+
+function customEffectHook({ count }: { count: number }) {
+  effect(() => {
+    console.log("It works");
+    console.log("New Count:", count);
+
+    return () => console.log("Cleaning up shit");
+  }, [count]);
+}
 
 /**
  * Smaller nested component.
@@ -7,6 +16,9 @@ import { state } from "../hooks";
  */
 export function Counter() {
   const [count, setCount] = state<number>(0);
+
+  // Effect hook test
+  customEffectHook({ count });
 
   function clickHandler() {
     setCount(c => c + 1);
