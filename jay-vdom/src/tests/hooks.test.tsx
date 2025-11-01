@@ -1,5 +1,5 @@
 import { afterEach, describe } from "node:test";
-import { assert, beforeAll, beforeEach, expect, test } from "vitest";
+import { assert, beforeAll, expect, test } from "vitest";
 import { derivedBy, effect, state, store } from "../hooks";
 import { build } from "../main";
 import { renderComponent } from "../render";
@@ -166,7 +166,7 @@ describe("Unit Test: state updates", () => {
     const globalValue = writable(2);
 
     const vnode6 = () => {
-      const [count, setCount] = store(globalValue);
+      const [, setCount] = store(globalValue);
       const [value] = state<number>(2);
       const [doubled] = derivedBy(globalValue, n => n * value);
       return (

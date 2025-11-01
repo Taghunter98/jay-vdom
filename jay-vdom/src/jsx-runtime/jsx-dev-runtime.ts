@@ -1,24 +1,27 @@
 import createElement from "../createElement";
 
-export function jsx(type: any, props: any, key?: any) {
+/**
+ * # JSX factory function.
+ *
+ * Factory for building JSX objects as createElement Jay-VDOM
+ * elements.
+ *
+ * 'key': any removed for now
+ */
+export function jsx(type: any, props: any): any {
   if (typeof type === "function") {
-    const result = type(props ?? {});
-    if (!result)
-      throw new Error(`Component ${type.name} did not return a VElement`);
-    return result;
+    return type(props);
   }
 
   const { children, ...attrs } = props ?? {};
-
-  const childNodes = (
+  const childNodes =
     children === undefined
       ? []
       : Array.isArray(children)
       ? children
-      : [children]
-  ).filter(Boolean);
+      : [children];
 
   return createElement(type, attrs, childNodes);
 }
 
-export { jsx as jsxs, jsx as Fragment, jsx as jsxDEV };
+export { jsx as jsxDEV, jsx as jsxs, jsx as Fragment };

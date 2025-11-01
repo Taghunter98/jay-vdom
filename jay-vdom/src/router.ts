@@ -57,7 +57,10 @@ export default function Router(props: {
   id?: string;
   class?: string;
   children?: VElement[];
-  layout?: (links: VNode[], currentPage: VNode) => VElement;
+  layout?: (
+    links: VNode | string[] | undefined,
+    currentPage: VNode
+  ) => VElement;
 }) {
   const links = props.children ?? [];
   if (!links.length) throw new Error("No components provided");
@@ -83,7 +86,7 @@ export default function Router(props: {
   const currentPage = linkMap.get(page);
   if (!currentPage) throw new Error("Page rendering failed");
 
-  if (props.layout) return props.layout(newLinks, currentPage);
+  if (props.layout) return props.layout(newLinks as string[], currentPage);
 
   // Default layout (navbar + page)
   return createElement("div", {}, [
