@@ -1,4 +1,4 @@
-import { beginRenderFor, endRenderFor } from "./hooks";
+import { beginRenderFor, endRenderFor, flushEffects } from "./hooks";
 import type { VElement, VNode, VAttrs } from "./types";
 
 export type Rendered = HTMLElement | Text;
@@ -164,5 +164,6 @@ export function renderComponent<T extends any[]>(
     return fn(...args);
   } finally {
     endRenderFor();
+    flushEffects();
   }
 }

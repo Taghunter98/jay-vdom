@@ -30,7 +30,6 @@ export function Counter() {
       <button type="button" onClick={clickHandler}>
         {count.toString()}
       </button>
-      {/* <Name value="Steve" /> */}
     </div>
   );
 }
