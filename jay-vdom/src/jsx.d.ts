@@ -3,6 +3,7 @@ import type { GenericAttributes, Img, Input } from "./types";
 declare global {
   namespace JSX {
     interface IntrinsicElements {
+      main: GenericAttributes;
       div: GenericAttributes;
       span: GenericAttributes;
       p: GenericAttributes;

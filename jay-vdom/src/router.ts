@@ -53,7 +53,7 @@ import type { VElement, VNode } from "./types";
  * @param links Link array.
  * @returns Router element with links.
  */
-export default function Router(props: {
+export function Router(props: {
   id?: string;
   class?: string;
   children?: VElement[];

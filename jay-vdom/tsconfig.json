@@ -7,14 +7,14 @@
     "types": ["vite/client", "node"],
     "skipLibCheck": true,
     "outDir": "./dist",
+    "noEmit": false,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
 
     /* Linting */
     "strict": true,
@@ -26,7 +26,11 @@
 
     // JSX stuff
     "jsx": "react-jsxdev",
-    "jsxImportSource": "./jsx-runtime"
+    "jsxImportSource": "./jsx-runtime",
+
+    /* THIS IS KEY */
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/jsx.d.ts"]
 }

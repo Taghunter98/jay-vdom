@@ -1,7 +1,7 @@
 import { test, afterEach, beforeEach, describe } from "vitest";
 import { renderComponent } from "../render";
 import type { VNode } from "../types";
-import Router from "../router";
+import { Router } from "../router";
 import { div, Link } from "../elements";
 import { build } from "../main";
 import { expect } from "vitest";

@@ -213,7 +213,7 @@ export function diffChildren(
  * @param newVTree New VNode.
  * @returns Patched HTMLElement or undefined.
  */
-export default function diff(oldVTree: VNode, newVTree?: VNode | null): Patch {
+export function diff(oldVTree: VNode, newVTree?: VNode | null): Patch {
   if (newVTree == null) {
     return ($node: Rendered) => {
       $node.remove();

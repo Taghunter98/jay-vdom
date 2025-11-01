@@ -1,2 +1,2 @@
-import { jsxDEV } from "../../app/jsx-runtime/jsx-dev-runtime";
+import { jsxDEV } from "../../jsx-runtime/jsx-dev-runtime";
 export { jsxDEV };
