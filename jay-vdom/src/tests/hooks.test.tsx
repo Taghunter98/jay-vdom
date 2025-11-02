@@ -3,18 +3,19 @@ import { assert, beforeAll, expect, test } from "vitest";
 import { derivedBy, effect, state, store } from "../hooks";
 import { build } from "../main";
 import { renderComponent } from "../render";
-import { div } from "../elements";
 import type { VNode } from "../types";
 import { readable, writable } from "../stores";
+import createElement from "../createElement";
 
 describe("Unit Test: state updates", () => {
   const buildHelper = (component: () => VNode) => {
     const App = () =>
-      div(
+      createElement(
+        "div",
         {
           id: "app",
         },
-        renderComponent(component)
+        [renderComponent(component)]
       );
 
     build(App);

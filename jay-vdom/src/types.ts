@@ -49,35 +49,14 @@ export type VNode = VElement | string;
  */
 export type LinkType = { key: string; attrs?: VAttrs; element: VElement };
 
-/**
- * # Img
- *
- * Represents an HTML img attributes.
- */
-export interface Img extends GenericAttributes {
-  /**
-   * # src
-   *
-   * Source url or directory for the given image.
-   *
-   * ```tsx
-   * <img src="../images/pic.jpg" />
-   * ```
-   */
-  src?: string;
+export interface VirtualInput extends GenericAttributes {
+  bind?: (v: string) => void;
 }
 
-export interface Input extends GenericAttributes {
-  /**
-   * # placeholder
-   *
-   * Placeholder text for the input element.
-   *
-   * ```tsx
-   * <input placeholder="Enter Email" />
-   * ```
-   */
-  placeholder?: string;
+export interface VirtualEach<T> extends GenericAttributes {
+  values: T[] | ArrayLike<T> | Record<string, T>;
+  layout: (value: T, index: number) => VNode;
+  as?: keyof HTMLElementTagNameMap;
 }
 
 export interface GenericAttributes extends VEventHandlers {
@@ -140,6 +119,28 @@ export interface GenericAttributes extends VEventHandlers {
    * ```
    */
   type?: string;
+
+  /**
+   * # placeholder
+   *
+   * Placeholder text for the input element.
+   *
+   * ```tsx
+   * <input placeholder="Enter Email" />
+   * ```
+   */
+  placeholder?: string;
+
+  /**
+   * # src
+   *
+   * Source url or directory for the given image.
+   *
+   * ```tsx
+   * <img src="../images/pic.jpg" />
+   * ```
+   */
+  src?: string;
 
   /**
    * # children

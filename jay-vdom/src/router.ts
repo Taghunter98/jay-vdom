@@ -8,10 +8,14 @@ import type { VElement, VNode } from "./types";
  * A Jay-VDOM element that takes Link elements and constructs
  * a SPA router for displaying content.
  *
- * The SPA router is case sensitive and will create URLs in lowercase with
- * a - spacer.
+ * ## Props
  *
- * So a link with key 'Dog Pics' becomes /dog-pics.
+ * - id? `string` Router id attribute.
+ * - class? `string` Class attributes.
+ * - children? `Vnode[]` Child VNode links.
+ * - layout? `(links: string[], currentPage: VNode) => VNode` Layout component.
+ * - error404? `VNode` 404 page component.
+ * - url? `boolean` Router emits url per page.
  *
  * ## Throws Errors
  *
@@ -54,6 +58,15 @@ import type { VElement, VNode } from "./types";
  * </Router>
  * ```
  *
+ * Add an optional 404 page for errors.
+ *
+ * ```tsx
+ * <Router
+ *   error404={<Error type="404" />}
+ * >
+ * </Router>
+ * ```
+ *
  * @param attrs HTML attributes for the router.
  * @param links Link array.
  * @returns Router element with links.
@@ -64,6 +77,7 @@ export function Router(props: {
   children?: VNode[];
   layout?: (links: string[], currentPage: VNode) => VNode;
   error404?: VNode;
+  url?: boolean;
 }) {
   const links = props.children ?? [];
   if (!links.length) throw new Error("No components provided");
@@ -77,10 +91,7 @@ export function Router(props: {
     const hash = key + "#" + i;
     const css = childNode.attrs?.["class"] as string;
 
-    // Store key in map separately
     linkMap.set(hash, { node: childNode, key });
-
-    // Clear attributes for rendering
     childNode.attrs = {};
 
     newLinks.push(
@@ -92,7 +103,7 @@ export function Router(props: {
             const path = `/${encodeURIComponent(
               key.toLowerCase().replace(/\s+/g, "-")
             )}`;
-            history.pushState({ page: key }, "", path);
+            if (props.url) history.pushState({ page: key }, "", path);
             setPage(hash);
           },
         },
@@ -107,7 +118,6 @@ export function Router(props: {
     ((links[0] as VElement).attrs?.["data-key"] ?? "") + "#0";
 
   const [page, setPage] = state<string>(initialHash);
-
   const currentPage = linkMap.get(page)?.node;
   if (!currentPage) {
     return props.error404
@@ -130,18 +140,36 @@ export function Router(props: {
   ]);
 }
 
-// Helper to map a key to a path
+/**
+ * # keyToPath
+ *
+ * Helper function converts a given key to URL path.
+ *
+ * @param key Hash.
+ * @returns URL param.
+ */
 function keyToPath(key: string) {
   return "/" + encodeURIComponent(key.toLowerCase().replace(/\s+/g, "-"));
 }
 
-// Find hash by key
+/**
+ * # findHashByPath
+ *
+ * Helper function finds the correct component to render based of the url path.
+ *
+ * If the path is / the first page is returned.
+ *
+ * @param path URL path.
+ * @param linkMap Map of current links.
+ * @returns Hash or null.
+ */
 function findHashByPath(
   path: string,
   linkMap: Map<string, { node: VElement; key: string }>
 ) {
-  for (const [hash, { key }] of linkMap.entries()) {
+  if (path === "/") return linkMap.keys().next().value;
+  for (const [hash, { key }] of linkMap.entries())
     if (keyToPath(key) === path) return hash;
-  }
+
   return null;
 }

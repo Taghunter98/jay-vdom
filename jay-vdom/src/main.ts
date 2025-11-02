@@ -12,7 +12,7 @@ import type { VElement, VNode } from "./types";
  *
  * Created on app startup.
  */
-let vApp: (() => VElement) | null = null;
+let vApp: (() => VNode) | null = null;
 
 // current mounted VDOM and rendered DOM
 let $currentState: VNode;
@@ -47,13 +47,13 @@ let $currentVDOM: Rendered;
  * build(App)
  * ```
  */
-export function build(appState: () => VElement) {
+export function build(appState: () => VNode) {
   resetRenderCounter();
   beginRenderFor("AppRoot");
   try {
     vApp = appState;
     $currentState = appState();
-    const $app = renderElement($currentState);
+    const $app = renderElement($currentState as VElement);
     const $div = document.getElementById("app");
     if (!$div) throw new Error("Error mounting app");
     $currentVDOM = mount($app, $div);

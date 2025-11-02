@@ -1,7 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import createElement from "../createElement";
 import { attachListener, render, renderComponent } from "../render";
-import { div, h1, img, p } from "../elements";
 
 describe("Testing render", () => {
   /**
@@ -61,7 +60,9 @@ describe("Testing render", () => {
 
   test("Should render a component", () => {
     const component = ({ name }: { name: string }) => {
-      return div({ id: "test" }, h1(name));
+      return createElement("div", { id: "test" }, [
+        createElement("h1", {}, [name]),
+      ]);
     };
 
     renderComponent(component, { name: "Testing" });
@@ -71,7 +72,7 @@ describe("Testing render", () => {
 });
 
 describe("Testing event listeners", () => {
-  const vnode = div({ id: "test" });
+  const vnode = createElement("div", { id: "test" });
 
   /**
    * Tests attaching an onclick event
@@ -102,15 +103,13 @@ describe("Testing event listeners", () => {
 
 describe("Testing Element Library", () => {
   test("Should render a div", () => {
-    const vnode = div(
-      { id: "test" },
-      div(
-        {},
-        h1({}, "Hello World!"),
-        p({}, "This is cool text"),
-        img({ src: "https://..." })
-      )
-    );
+    const vnode = createElement("div", { id: "test" }, [
+      createElement("div", {}, [
+        createElement("h1", {}, ["Hello World!"]),
+        createElement("p", {}, ["This is cool text"]),
+        createElement("img", { src: "https://..." }),
+      ]),
+    ]);
     const element = render(vnode);
     document.body.appendChild(element);
 

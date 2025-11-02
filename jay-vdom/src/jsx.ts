@@ -1,4 +1,4 @@
-import type { GenericAttributes, Input, Img, VNode } from "./types";
+import type { GenericAttributes, VNode } from "./types";
 
 /**
  * # JSX Types
@@ -14,8 +14,8 @@ declare global {
       span: GenericAttributes;
       p: GenericAttributes;
       button: GenericAttributes;
-      input: Input;
-      img: Img;
+      input: GenericAttributes;
+      img: GenericAttributes;
       h1: GenericAttributes;
       h2: GenericAttributes;
       h3: GenericAttributes;
