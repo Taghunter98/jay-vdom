@@ -7,14 +7,13 @@
     "types": ["vite/client", "node"],
     "skipLibCheck": true,
     "outDir": "./dist",
-    "noEmit": false,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "isolatedModules": false,
+    "isolatedModules": true,
 
     /* Linting */
     "strict": true,
@@ -32,5 +31,5 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/jsx.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
 }

@@ -56,7 +56,7 @@ import type { VElement, VNode } from "./types";
 export function Router(props: {
   id?: string;
   class?: string;
-  children?: VElement[];
+  children?: VNode[];
   layout?: (
     links: VNode | string[] | undefined,
     currentPage: VNode
@@ -66,21 +66,22 @@ export function Router(props: {
   if (!links.length) throw new Error("No components provided");
 
   const [page, setPage] = state<string>(
-    (links[0].attrs?.["data-key"] ?? "") + "#0"
+    ((links[0] as VElement).attrs?.["data-key"] ?? "") + "#0"
   );
 
   const newLinks: VNode[] = [];
   const linkMap: Map<string, VElement> = new Map();
 
   links.forEach((child, i) => {
-    const key = child.attrs?.["data-key"] as string;
+    const childNode = child as VElement;
+    const key = childNode.attrs?.["data-key"] as string;
     const hash = key + "#" + i;
-    const css = child.attrs?.["class"] as string;
-    child.attrs = {};
+    const css = childNode.attrs?.["class"] as string;
+    childNode.attrs = {};
     newLinks.push(
       createElement("a", { class: css, onClick: () => setPage(hash) }, [key])
     );
-    linkMap.set(hash, child);
+    linkMap.set(hash, childNode);
   });
 
   const currentPage = linkMap.get(page);

@@ -11,19 +11,29 @@
     },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime/jsx-dev-runtime.js",
-      "types": "./dist/jsx.d.ts"
+      "types": "./dist/jsx-runtime/jsx-dev-runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx-runtime/jsx-dev-runtime.js",
+      "types": "./dist/jsx-runtime/jsx-dev-runtime.d.ts"
     }
   },
   "typesVersions": {
     "*": {
+      "*": [
+        "./dist/*.d.ts"
+      ],
       "jsx-runtime": [
-        "./dist/jsx.d.ts"
+        "./dist/jsx-runtime/jsx-dev-runtime.d.ts"
+      ],
+      "jsx-dev-runtime": [
+        "./dist/jsx-runtime/jsx-dev-runtime.d.ts"
       ]
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc",
     "preview": "vite preview",
     "test": "vitest run src/tests/"
   },

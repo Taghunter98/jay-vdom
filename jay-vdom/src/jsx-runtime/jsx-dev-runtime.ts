@@ -1,4 +1,5 @@
 import createElement from "../createElement";
+import type { VNode } from "../types";
 
 /**
  * # JSX factory function.
@@ -8,7 +9,7 @@ import createElement from "../createElement";
  *
  * 'key': any removed for now
  */
-export function jsx(type: any, props: any): any {
+export function jsx(type: any, props: any): VNode {
   if (typeof type === "function") {
     return type(props);
   }

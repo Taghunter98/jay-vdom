@@ -47,7 +47,7 @@ export type VNode = VElement | string;
  *
  * Represents a Jay-VDOM Link element, takes an additonal key for identification.
  */
-export type Link = { key: string; attrs?: VAttrs; element: VElement };
+export type LinkType = { key: string; attrs?: VAttrs; element: VElement };
 
 /**
  * # Img
@@ -125,7 +125,15 @@ export interface GenericAttributes extends VEventHandlers {
    */
   style?: string;
   type?: string;
-  children?: string[] | string | VNode;
+  children?: VNode | VNode[] | string | number | boolean | null | undefined;
+}
+
+declare global {
+  namespace JSX {
+    interface ElementChildrenAttribute {
+      children: {}; // tell TS that JSX children use the `children` prop
+    }
+  }
 }
 
 /**

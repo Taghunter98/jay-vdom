@@ -3,13 +3,12 @@ import type {
   GenericAttributes,
   Img,
   Input,
-  Link,
   VAttrs,
   VElement,
   VNode,
 } from "./types";
 
-type Values = Array<VNode | GenericAttributes>;
+export type Values = Array<VNode | GenericAttributes>;
 
 /**
  * # isVNode
@@ -93,7 +92,7 @@ function buildGenericElement(
  */
 export function Link(
   props: { dataKey: string; class?: string; children: VNode | VNode[] } & VAttrs
-): VElement {
+): VNode {
   const { dataKey, children, ...attrs } = props;
   const kids = Array.isArray(children) ? children : [children];
 
