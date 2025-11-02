@@ -5,7 +5,7 @@ import { build } from "../main";
 import { renderComponent } from "../render";
 import { div } from "../elements";
 import type { VNode } from "../types";
-import { writable } from "../stores";
+import { readable, writable } from "../stores";
 
 describe("Unit Test: state updates", () => {
   const buildHelper = (component: () => VNode) => {
@@ -183,5 +183,26 @@ describe("Unit Test: state updates", () => {
       .querySelector("button")
       ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(document.body.querySelector("p")?.innerHTML).toBe("8");
+  });
+
+  test("Should build a readable store", () => {
+    const contextStore = readable<string>("light");
+
+    const vnode7 = () => {
+      const [value, setValue] = store(contextStore);
+      return (
+        <div>
+          <p>{value}</p>
+          <button onClick={() => setValue("dark")}></button>
+        </div>
+      );
+    };
+
+    buildHelper(vnode7);
+    expect(document.body.querySelector("p")?.innerHTML).toBe("light");
+    document.body
+      .querySelector("button")
+      ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    assert(document.body.querySelector("p")?.innerHTML != "dark");
   });
 });

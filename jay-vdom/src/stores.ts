@@ -1,14 +1,32 @@
 type Subscriber<T> = (value: T) => void;
+type Store<T> = {
+  set: (newValue: T | ((v: T) => T)) => void;
+  subscribe: (fn: Subscriber<T>) => () => boolean;
+  value: T;
+};
 
 /**
  * # writeable
  *
  * Function creates a writeable store for data sharing across components.
  *
- * @param initial
- * @returns
+ * ```tsx
+ * // Setup a new writeable store
+ * const myStore = writeable<number>(0);
+ *
+ * // Use the store
+ * function TestStore() {
+ *   const [value] = store(myStore);
+ *
+ *   return(
+ *     <p>{value.toString()}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @param initial Inital value for the store.
  */
-export function writable<T>(initial: T) {
+export function writable<T>(initial: T): Store<T> {
   let value = initial;
   const subscribers = new Set<Subscriber<T>>();
 
@@ -81,9 +99,28 @@ export function writable<T>(initial: T) {
 /**
  * # derived
  *
- * @param store
- * @param fn
- * @returns
+ * Subscribes to a given store and creates a new store based on a
+ * derivation function.
+ *
+ * To access the store, subscribe to it and use the returned value.
+ *
+ *
+ * ```tsx
+ * const myStore = writeable(0);
+ *
+ * function TestStore() {
+ *   const derived = derived(myStore, x => x + 2);
+ *   const [value] = store(derived);
+ *
+ *   return(
+ *     <p>{value.toString()}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @param store Store to derive from.
+ * @param fn Derivation function.
+ * @returns New store to subscribe to.
  */
 export function derived<A, B>(
   store: ReturnType<typeof writable<A>>,
@@ -95,4 +132,47 @@ export function derived<A, B>(
   // Subscribe the current store and set the new value
   store.subscribe(v => result.set(fn(v)));
   return result;
+}
+
+/**
+ * # readable
+ *
+ * Builds a read-only store that allows for persistent data to be read by other
+ * elements globally.
+ *
+ * ## Example
+ *
+ * Seriously don't actually do this... it's just an example!
+ *
+ * ```tsx
+ * const apiKey = readable<string>("AD34-B9JK-17PN");
+ *
+ * function Connector() {
+ *   const [key] = store(apiKey);
+ *   const [data, setData] = state(null);
+ *
+ *   effect(() => {
+ *     let fetched = false;
+ *
+ *     fetch(`https://api.com?key=${key}`)
+ *       .then(res => res.json())
+ *       .then(data => {
+ *         if (!fetched) setData(data.values);
+ *       })
+ *       .catch(err => console.error(err));
+ *     return () => (fetched = true);
+ *   }, []);
+ * }
+ * ```
+ *
+ * @param value
+ * @returns
+ */
+export function readable<T>(value: T): Store<T> {
+  const store = writable(value);
+
+  return {
+    ...store,
+    set: () => undefined,
+  };
 }

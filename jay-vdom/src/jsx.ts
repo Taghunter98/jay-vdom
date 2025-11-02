@@ -1,5 +1,10 @@
 import type { GenericAttributes, Input, Img, VNode } from "./types";
 
+/**
+ * # JSX Types
+ *
+ * These are the mapped types that correspond to JSX HTML values.
+ */
 declare global {
   namespace JSX {
     type Element = VNode;

@@ -60,8 +60,8 @@ export interface Img extends GenericAttributes {
    *
    * Source url or directory for the given image.
    *
-   * ```ts
-   * img({ src: "../images/pic.jpg" })
+   * ```tsx
+   * <img src="../images/pic.jpg" />
    * ```
    */
   src?: string;
@@ -72,6 +72,10 @@ export interface Input extends GenericAttributes {
    * # placeholder
    *
    * Placeholder text for the input element.
+   *
+   * ```tsx
+   * <input placeholder="Enter Email" />
+   * ```
    */
   placeholder?: string;
 }
@@ -84,8 +88,8 @@ export interface GenericAttributes extends VEventHandlers {
    *
    * ## Example
    *
-   * ```ts
-   * p({ id: "p-2"}, "Hello World!")
+   * ```tsx
+   * <p id="p-2">Hello World!</p>
    * ```
    */
   id?: string;
@@ -124,14 +128,49 @@ export interface GenericAttributes extends VEventHandlers {
    * ```
    */
   style?: string;
+
+  /**
+   * # type
+   *
+   * Type value for the element.
+   *
+   * ```tsx
+   * <button type="button">Click</button>
+   * <input type="text" />
+   * ```
+   */
   type?: string;
+
+  /**
+   * # children
+   *
+   * Attribute allows for additonal children to be nested.
+   *
+   * ```tsx
+   * function CustomElement({ children }: { children: VNode[] }) {
+   *   return(
+   *     <div>{children}</div>
+   *   )
+   * }
+   * ```
+   * Then in another component, the children can be added.
+   * ```tsx
+   * <CustomElement>
+   *   <p>Nested child 1</p>
+   *   <p>Nested child 2</p>
+   * </CustomElement>
+   * ```
+   */
   children?: VNode | VNode[] | string | number | boolean | null | undefined;
 }
 
+/**
+ * Global namespace for JSX - links to genericAttributes
+ */
 declare global {
   namespace JSX {
     interface ElementChildrenAttribute {
-      children: {}; // tell TS that JSX children use the `children` prop
+      children: {};
     }
   }
 }
@@ -155,9 +194,12 @@ export interface VEventHandlers {
    *
    * Called when the element is clicked.
    *
-   * Example:
-   * ```ts
-   * onClick: (e: Event) => { console.log(e.target.value); }
+   * ```tsx
+   * <button onClick={
+   *   (e: Event) => console.log(e.target.value)
+   * } >
+   *   Click
+   * </button>
    * ```
    */
   onClick?: ClickHandler;
@@ -165,9 +207,13 @@ export interface VEventHandlers {
   /**
    * # onPointer
    *
-   * Pointer event handler. Useful for pointer-specific properties (pressure, pointerType).
+   * Called when the cursor is moved.
+   *
+   * ```tsx
+   * <div onPointerMove={ (e) => console.log(e.clientX) }><div>
+   * ```
    */
-  onPointer?: PointerHandler;
+  onPointerMove?: PointerHandler;
 
   /**
    * # onInput
