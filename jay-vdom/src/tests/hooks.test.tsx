@@ -5,7 +5,7 @@ import { build } from "../main";
 import { renderComponent } from "../render";
 import type { VNode } from "../types";
 import { readable, writable } from "../stores";
-import createElement from "../createElement";
+import { createElement } from "../createElement";
 
 describe("Unit Test: state updates", () => {
   const buildHelper = (component: () => VNode) => {

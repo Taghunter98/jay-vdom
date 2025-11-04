@@ -59,6 +59,12 @@ export interface VirtualEach<T> extends GenericAttributes {
   as?: keyof HTMLElementTagNameMap;
 }
 
+export interface VirtualIf {
+  when: boolean;
+  then: VNode;
+  else?: VNode | VirtualIf;
+}
+
 export interface GenericAttributes extends VEventHandlers {
   /**
    * # id

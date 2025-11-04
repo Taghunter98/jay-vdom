@@ -1,4 +1,4 @@
-import createElement from "./createElement";
+import { createElement } from "./createElement";
 import { state } from "./hooks";
 import type { VElement, VNode } from "./types";
 
@@ -100,9 +100,7 @@ export function Router(props: {
         {
           class: css,
           onClick: () => {
-            const path = `/${encodeURIComponent(
-              key.toLowerCase().replace(/\s+/g, "-")
-            )}`;
+            const path = keyToPath(key);
             if (props.url) history.pushState({ page: key }, "", path);
             setPage(hash);
           },
@@ -170,6 +168,6 @@ function findHashByPath(
   if (path === "/") return linkMap.keys().next().value;
   for (const [hash, { key }] of linkMap.entries())
     if (keyToPath(key) === path) return hash;
-
+    else return linkMap.keys().next().value;
   return null;
 }

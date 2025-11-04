@@ -58,6 +58,13 @@ export function endRenderFor() {
   currentComponentId = null;
 }
 
+/**
+ * # flushEffects
+ *
+ * Function flushes all the current effects from the queue and runs each effect.
+ *
+ * Executed after the component renders.
+ */
 export function flushEffects() {
   const queue = effectQueue;
   effectQueue = [];
@@ -80,6 +87,13 @@ export function resetRenderCounter() {
   renderCounter = 0;
 }
 
+/**
+ * # buildHookKey
+ *
+ * Helper function constructs a unique hook key from the current component's id and hook index.
+ *
+ * @returns Hook key.
+ */
 function buildHookKey(): string {
   return `${currentComponentId}:${currentHookIndex++}`;
 }
@@ -107,7 +121,7 @@ function buildHookKey(): string {
  *        onClick={ () => setCount(n => n + 1) }
  *      >
  *        Increment
- *      </button
+ *      </button>
  *    )
  * }
  * ```
@@ -243,7 +257,6 @@ export function effect(fn: () => void | (() => void), deps?: any[]): void {
   const changed =
     !prev?.deps || !deps || deps.some((d, i) => !Object.is(d, prev.deps?.[i]));
 
-  // only run once if []
   if (deps?.length === 0 && prev?.run) return;
 
   if (changed) {
@@ -254,7 +267,6 @@ export function effect(fn: () => void | (() => void), deps?: any[]): void {
       effectsForComponent.set(hookKey, { fn, deps, cleanup, run: true });
     };
 
-    // Push to queue
     effectQueue.push(runEffect);
   }
 }
@@ -263,7 +275,7 @@ export function effect(fn: () => void | (() => void), deps?: any[]): void {
  * # store
  *
  * Hook runs once per component render and retrieves the current value from
- * a `writeable` data store.
+ * a `writable` data store.
  *
  * ## Example
  *
@@ -302,7 +314,6 @@ export function store<T>(
 ): [T, (next: T | ((prev: T) => T)) => void] {
   const [value, setValue] = state<T>(store.value);
 
-  // subscribe once when component mounts
   effect(() => {
     const unsubscribe = store.subscribe(val => {
       if (!Object.is(val, value)) setValue(val);
@@ -318,17 +329,17 @@ export function store<T>(
  *
  * Hook runs once per component render and derives a value from a store.
  *
- * ## Examples
- *
- * Derive multiplications
+ * ## Example
  *
  * ```ts
- *
+ * const counter = writable(0);
+ * const [count, setCount] = store(counter);
+ * const [derivedCount] = derivedBy(counter, c => c + 2);
  * ```
  *
- * @param st
- * @param fn
- * @returns
+ * @param st Store to derive from.
+ * @param fn Derivation function.
+ * @returns Derived value from store.
  */
 export function derivedBy<A, B>(
   st: ReturnType<typeof writable<A>>,

@@ -1,4 +1,4 @@
-import createElement from "../createElement";
+import { createElement } from "../createElement";
 import type { VNode } from "../types";
 
 /**

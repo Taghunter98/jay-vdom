@@ -1,6 +1,6 @@
 import { afterEach, assert, describe, expect, test, vi } from "vitest";
 
-import createElement from "../createElement";
+import { createElement } from "../createElement";
 import {
   diff,
   diffAttrs,

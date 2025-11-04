@@ -23,7 +23,7 @@ import type { VAttrs, VNode, VElement } from "./types";
  * @param children Element children, VNode list.
  * @returns VElement.
  */
-export default function createElement(
+export function createElement(
   tagName: string,
   attrs?: VAttrs,
   children?: VNode[]

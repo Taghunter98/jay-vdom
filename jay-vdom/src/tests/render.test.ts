@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import createElement from "../createElement";
+import { createElement } from "../createElement";
 import { attachListener, render, renderComponent } from "../render";
 
 describe("Testing render", () => {
