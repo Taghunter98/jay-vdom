@@ -186,6 +186,9 @@ describe("Unit Test: state updates", () => {
     expect(document.body.querySelector("p")?.innerHTML).toBe("8");
   });
 
+  /**
+   * Tests reading and wrting from a store.
+   */
   test("Should build a readable store", () => {
     const contextStore = readable<string>("light");
 

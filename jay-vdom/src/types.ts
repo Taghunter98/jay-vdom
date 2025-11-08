@@ -49,26 +49,77 @@ export type VNode = VElement | string;
  */
 export type LinkType = { key: string; attrs?: VAttrs; element: VElement };
 
+/**
+ * # VirtualInput
+ *
+ * Represents an HTML input element with binding.
+ */
 export interface VirtualInput extends GenericAttributes {
   bind?: (v: string) => void;
 }
 
+/**
+ * # VirtualEach
+ *
+ * Represents an each block with
+ */
 export interface VirtualEach<T> extends GenericAttributes {
+  /**
+   * Specify the values to be iterated over, either a list or object.
+   */
   values: T[] | ArrayLike<T> | Record<string, T>;
-  layout: (value: T, index: number) => VNode;
-  as?: keyof HTMLElementTagNameMap;
+
+  /**
+   * Specify the layout for each element.
+   *
+   * ```tsx
+   * as={
+   *   (value, i) => <p>Item: {value} Index: {i}</p>
+   * }
+   * ```
+   */
+  as: (value: T, index: number) => VNode;
+
+  /**
+   * Specify the html element to wrap the values in, defaults to `div`.
+   */
+  element?: keyof HTMLElementTagNameMap;
+}
+
+export interface VirtualControl {
+  /**
+   * Specify when the element will render. Needs to return a boolean.
+   *
+   * ```tsx
+   * when={x == 2}
+   * ```
+   */
+  when: boolean;
+  children: VNode[] | VNode;
 }
 
 export interface VirtualIf {
+  /**
+   * Specify when the element will render. Needs to return a boolean.
+   *
+   * ```tsx
+   * when={x == 2}
+   * ```
+   */
   when: boolean;
+
+  /**
+   * Specify the rendered output if the condition is met.
+   *
+   * ```tsx
+   * then={<p>{x} is equal to 2</p>}
+   * ```
+   */
   then: VNode;
-  else?: VNode | VirtualIf;
 }
 
 export interface GenericAttributes extends VEventHandlers {
   /**
-   * # id
-   *
    * Identifier for the HTML element.
    *
    * ## Example
@@ -80,8 +131,6 @@ export interface GenericAttributes extends VEventHandlers {
   id?: string;
 
   /**
-   * # value
-   *
    * Value of the HTML element.
    *
    * ## Example
@@ -93,9 +142,7 @@ export interface GenericAttributes extends VEventHandlers {
   value?: string;
 
   /**
-   * # class
-   *
-   * CSS classes value for the element.
+   * CSS class value of the HTML element.
    *
    * ```tsx
    * <p class="font-bold text-base"></p>
@@ -104,9 +151,7 @@ export interface GenericAttributes extends VEventHandlers {
   class?: string;
 
   /**
-   * # style
-   *
-   * CSS style value for the element.
+   * CSS style value for the HTML element.
    *
    * ```tsx
    * <p style="color: red; font-size: 14pt;"></p>
@@ -115,9 +160,7 @@ export interface GenericAttributes extends VEventHandlers {
   style?: string;
 
   /**
-   * # type
-   *
-   * Type value for the element.
+   * Type value for the HTML element.
    *
    * ```tsx
    * <button type="button">Click</button>
@@ -127,9 +170,7 @@ export interface GenericAttributes extends VEventHandlers {
   type?: string;
 
   /**
-   * # placeholder
-   *
-   * Placeholder text for the input element.
+   * Placeholder text for the HTML input element.
    *
    * ```tsx
    * <input placeholder="Enter Email" />
@@ -138,9 +179,7 @@ export interface GenericAttributes extends VEventHandlers {
   placeholder?: string;
 
   /**
-   * # src
-   *
-   * Source url or directory for the given image.
+   * Source url or directory for the given element.
    *
    * ```tsx
    * <img src="../images/pic.jpg" />
@@ -149,8 +188,6 @@ export interface GenericAttributes extends VEventHandlers {
   src?: string;
 
   /**
-   * # children
-   *
    * Attribute allows for additonal children to be nested.
    *
    * ```tsx

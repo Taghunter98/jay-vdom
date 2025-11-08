@@ -167,7 +167,9 @@ function findHashByPath(
 ) {
   if (path === "/") return linkMap.keys().next().value;
   for (const [hash, { key }] of linkMap.entries())
-    if (keyToPath(key) === path) return hash;
-    else return linkMap.keys().next().value;
+    if (keyToPath(key) === path) {
+      console.log("Returning hash:", hash);
+      return hash;
+    }
   return null;
 }
